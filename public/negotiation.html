@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transacta — Live Autonomous Negotiation Room</title>
+  <meta name="description" content="Live Autonomous Negotiation Room for Transacta — Interactive chatbot dialogue between AI Buyer and Verified Merchant Agents, dynamic value bundling, and Razorpay checkout.">
+  
+  <!-- Google Fonts: Sora, Outfit, Inter Tight, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Razorpay Official Checkout SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="console-body">
+
+  <div class="dealroom-page-wrapper" style="padding-top: 1.25rem;">
+    <!-- Main Deal Room Container -->
+    <main class="dealroom-main-container" style="max-width: 1200px; margin: 0 auto; padding-top: 0;">
+
+      <!-- ===================================================================
+           DEDICATED LIVE NEGOTIATION ROOM (/negotiation)
+           =================================================================== -->
+      <div id="userDetailView" class="user-full-detail-view">
+        
+        <!-- Top Unified Navigation Bar (Prominent Bigger Back Button) -->
+        <div class="vendor-detail-nav-bar" style="margin-bottom: 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.85rem;">
+          <a href="/app" id="backToUserDealsListBtn" class="btn-negotiation-back">
+            <i data-lucide="arrow-left" style="width: 18px; height: 18px;"></i>
+            <span>Back to Active Negotiations</span>
+          </a>
+          
+          <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
+            <span class="vendor-deal-id-pill" id="userDealIdBadge">Negotiation Room #01</span>
+            <span id="dealStatusPill" class="round-status-pill">Negotiating...</span>
+            <button id="detailUserProfileBtn" class="btn-walkaway-test" style="font-size: 13px; padding: 0.45rem 0.95rem; border-radius: 9999px;" title="Click to change name">
+              <i data-lucide="user" style="width: 14px; height: 14px; color: #0284c7;"></i>
+              <span id="detailNavUserName">My Agent</span>
+            </button>
+            <button id="detailOpenHistoryBtn" class="btn-walkaway-test" style="font-size: 13px; padding: 0.45rem 0.95rem; border-radius: 9999px;">
+              <i data-lucide="history" style="width: 14px; height: 14px; color: #0284c7;"></i>
+              <span>My Deals</span>
+              <span id="detailHistoryCountBadge" style="background: #e0f2fe; color: #0284c7; font-size: 11px; font-weight: 800; padding: 0.15rem 0.45rem; border-radius: 999px; margin-left: 3px; display: none;">0</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Horizontal Product Header (Specifications, Current Merchant & Live Agreed Price & Header Pay Button) -->
+        <div class="vendor-clean-product-header">
+          <div class="vendor-clean-product-info">
+            <h2 id="userActiveProductTitle" class="vendor-clean-product-title">
+              Connecting Deal Room...
+            </h2>
+            <p id="userActiveProductSpecs" class="vendor-clean-product-specs">
+              Surveying verified Indian suppliers &amp; evaluating inventory specs...
+            </p>
+            <div class="vendor-clean-product-meta">
+              <span><strong>Target Budget:</strong> <span id="userActiveBudget" style="color: #0f172a; font-weight: 700;">—</span></span>
+              <span class="vendor-meta-dot">•</span>
+              <span><strong>Selected Seller:</strong> <span id="colMerchantName" style="color: #0284c7; font-weight: 700;">—</span></span>
+              <span class="vendor-meta-dot">•</span>
+              <span><strong>Seller Location:</strong> <span id="colMerchantLocation" style="color: #475569; font-weight: 600;">—</span></span>
+            </div>
+          </div>
+
+          <!-- Top-Right Agreed Price & Pay Button (Screenshot 1 Reference) -->
+          <div class="vendor-clean-price-box">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; width: 100%; gap: 0.5rem;">
+              <span class="vendor-clean-price-label">Agreed Settlement Price</span>
+              <span class="savings-tag-pill" id="headerSavingsBadge" style="display: none;">Save ₹0</span>
+            </div>
+            <div style="display: flex; align-items: baseline; gap: 0.5rem; margin: 0.2rem 0 0.45rem 0;">
+              <div id="userActiveCurrentPrice" class="vendor-clean-current-price">—</div>
+              <span style="font-size: 13px; color: #94a3b8; text-decoration: line-through;" id="headerOriginalPrice">—</span>
+            </div>
+            
+            <button id="headerRazorpayPayBtn" class="btn-razorpay-primary header-pay-btn">
+              <i data-lucide="lock" style="width: 15px; height: 15px;"></i>
+              <span id="headerPayBtnLabel">Pay with Razorpay</span>
+            </button>
+            <a id="headerDownloadInvoiceBtn" href="/invoice" target="_blank" class="btn-download-invoice-small" style="display: none; padding: 0.45rem 0.85rem !important; font-size: 12px !important; margin-top: 0.25rem;">
+              <i data-lucide="download" style="width: 13px; height: 13px;"></i>
+              <span>View &amp; Download Invoice</span>
+            </a>
+            <div class="header-rzp-subtext">
+              <img src="assets/razorpay-icon.svg" alt="Razorpay" style="width: 14px; height: 14px; object-fit: contain;">
+              <span>Secured by Razorpay Trusted Gateway</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================================================================
+             TWO-COLUMN WORKSPACE: LEFT CHATBOT + RIGHT MINIMAL MARKET DIRECTORY
+             =================================================================== -->
+        <div class="negotiation-two-col-grid">
+          
+          <!-- LEFT COLUMN: INTERACTIVE CHATBOT ROOM -->
+          <div class="chatbot-container-card">
+            <!-- Chat Header -->
+            <div class="chatbot-card-header">
+              <div style="display: flex; align-items: center; gap: 0.65rem;">
+                <div style="width: 32px; height: 32px; border-radius: 8px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center;">
+                  <i data-lucide="bot" style="width: 18px; height: 18px;"></i>
+                </div>
+                <div>
+                  <h3 style="margin: 0; font-size: 15px; font-weight: 800; color: #0f172a;">Autonomous Negotiation Chat</h3>
+                  <span style="font-size: 11.5px; color: #64748b;" id="chatMerchantSubtitle">Connected with Verified Merchant AI Agent</span>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.4rem; background: #f0fdf4; padding: 0.25rem 0.65rem; border-radius: 9999px; border: 1px solid #bbf7d0;">
+                <span class="vendor-pulse-green-dot" style="margin: 0;"></span>
+                <span style="font-size: 11.5px; color: #166534; font-weight: 700;" id="aiEngineStatusBadge">AI Engine Active</span>
+              </div>
+            </div>
+
+            <!-- Live Chat Messages Stream -->
+            <div class="chatbot-messages-stream" id="chatMessagesContainer">
+              <!-- Dynamically populated by negotiation.js -->
+            </div>
+
+            <!-- Quick Action Prompts Bar -->
+            <div class="chat-quick-actions-bar" id="chatQuickActions">
+              <button class="btn-chat-chip" data-action="counter_discount">
+                <i data-lucide="tag" style="width: 12px; height: 12px; display: inline-block; vertical-align: middle; margin-right: 2px;"></i>
+                <span id="counterChipLabel">Counter Offer</span>
+              </button>
+              <button class="btn-chat-chip" data-action="request_warranty">
+                <i data-lucide="shield-check" style="width: 12px; height: 12px; display: inline-block; vertical-align: middle; margin-right: 2px;"></i>
+                <span id="warrantyChipLabel">Request Free Extended Warranty</span>
+              </button>
+              <button class="btn-chat-chip" data-action="request_delivery">
+                <i data-lucide="zap" style="width: 12px; height: 12px; display: inline-block; vertical-align: middle; margin-right: 2px;"></i>
+                <span id="deliveryChipLabel">Ask for 24-Hr Express Dispatch</span>
+              </button>
+              <button class="btn-chat-chip" data-action="accept_deal" style="background: #f0fdf4; color: #166534; border-color: #bbf7d0; font-weight: 700;">
+                <i data-lucide="check" style="width: 12px; height: 12px; display: inline-block; vertical-align: middle; margin-right: 2px;"></i>
+                <span>Accept Offer &amp; Lock Deal</span>
+              </button>
+            </div>
+
+            <!-- Chat Input Form -->
+            <form id="chatInputForm" class="chat-input-form">
+              <input type="text" id="chatMessageInput" class="chat-text-input" placeholder="Type a counter-offer or ask the seller agent a question..." autocomplete="off">
+              <button type="submit" id="sendChatMessageBtn" class="btn-send-chat">
+                <span>Send</span>
+                <i data-lucide="send" style="width: 15px; height: 15px;"></i>
+              </button>
+            </form>
+
+            <!-- Locked Notice (Shown after payment cleared) -->
+            <div id="chatLockedNotice" class="chat-locked-banner">
+              <i data-lucide="lock" style="width: 16px; height: 16px;"></i>
+              <span>Deal Settled &amp; Paid via Razorpay — Negotiation Archived &amp; Order Queued for Dispatch</span>
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN: COMPETING VERIFIED MERCHANTS DIRECTORY -->
+          <div class="right-col-stack">
+            
+            <div class="right-card" style="height: 100%; display: flex; flex-direction: column;">
+              <div class="right-card-title">
+                <i data-lucide="users" style="width: 14px; height: 14px; color: #0284c7;"></i>
+                <span>Competing Verified Merchants</span>
+              </div>
+              <div class="right-card-subtitle">
+                Surveyed across 50 verified Indian suppliers in real time
+              </div>
+              <div id="competingMerchantsContainer" style="display: flex; flex-direction: column; gap: 0.6rem; flex: 1;">
+                <!-- Dynamically populated with 1 active seller + 3 alternative merchant cards -->
+              </div>
+            </div>
+
+          </div> <!-- End Right Column -->
+
+        </div> <!-- End 2-Col Grid -->
+
+        <!-- Bottom Horizontal Settlement & Itemized Value Breakdown (Screenshot 2 Reference) -->
+        <div class="bottom-horizontal-settlement-bar" id="bottomSettlementBar">
+          <div class="bottom-settlement-left">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem; flex-wrap: wrap; gap: 0.5rem;">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span class="settlement-status-badge">
+                  <i data-lucide="shield-check" style="width: 13px; height: 13px;"></i>
+                  <span id="bottomSettlementStatusText">Deal Consensus Ready</span>
+                </span>
+                <span style="font-size: 12px; color: #64748b; font-weight: 600;" id="bottomMerchantLabel">Fulfillment by Verified Supplier</span>
+              </div>
+              <span style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: #94a3b8; letter-spacing: 0.04em;">Agreed Package Breakdown</span>
+            </div>
+
+            <!-- Line-by-Line Itemized Value Bundles (Main Product + Free Bundles with crossed prices) -->
+            <div class="bottom-itemized-list" id="bottomItemizedList">
+              <div class="bottom-item-row main-item">
+                <div style="display: flex; align-items: center; gap: 0.4rem;">
+                  <strong id="bottomProductTitle" style="font-size: 13.5px; color: #0f172a; font-family: 'Sora', sans-serif;">Procured Item</strong>
+                  <span style="font-size: 11.5px; color: #64748b;">(Base Product)</span>
+                </div>
+                <strong id="bottomBasePriceTag" style="font-size: 13.5px; color: #0f172a; font-family: 'Sora', sans-serif;">—</strong>
+              </div>
+              
+              <div id="bottomBundlesContainer" style="display: flex; flex-direction: column; gap: 0.25rem;">
+                <!-- Dynamically populated line-by-line bundle items -->
+              </div>
+            </div>
+          </div>
+
+          <div class="bottom-settlement-right">
+            <div class="bottom-price-group">
+              <span style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: #64748b; letter-spacing: 0.04em;">Agreed Total Settlement</span>
+              <div style="display: flex; align-items: baseline; gap: 0.45rem;">
+                <strong style="font-size: 24px; font-family: 'Sora', sans-serif; color: #0f172a;" id="bottomFinalPrice">—</strong>
+                <span style="font-size: 13px; color: #94a3b8; text-decoration: line-through;" id="bottomOriginalPrice">—</span>
+              </div>
+              <span class="savings-tag-pill" id="bottomSavingsBadge" style="font-size: 11px; padding: 2px 7px; display: none;">Save ₹0</span>
+            </div>
+
+            <div class="bottom-pay-wrapper">
+              <button id="consoleRazorpayPayBtn" class="btn-razorpay-primary bottom-pay-btn">
+                <i data-lucide="lock" style="width: 16px; height: 16px;"></i>
+                <span id="payBtnLabel">Pay with Razorpay</span>
+              </button>
+              <a id="bottomDownloadInvoiceBtn" href="/invoice" target="_blank" class="btn-download-invoice-small" style="display: none;">
+                <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                <span>View &amp; Download Invoice</span>
+              </a>
+              <div class="bottom-rzp-subtext">
+                <img src="assets/razorpay-icon.svg" alt="Razorpay" style="width: 14px; height: 14px; object-fit: contain; flex-shrink: 0;">
+                <span>Secured by Razorpay Trusted Gateway</span>
+              </div>
+            </div>
+          </div>
+        </div> <!-- End bottomSettlementBar -->
+
+      </div> <!-- End userDetailView -->
+
+  <!-- Cryptographic Receipt Modal on Settlement -->
+  <div class="receipt-modal-backdrop" id="receiptModalBackdrop">
+    <div class="receipt-modal-card">
+      <div class="receipt-modal-header">
+        <div>
+          <span class="receipt-badge-verified">
+            <i data-lucide="shield-check" style="width: 14px; height: 14px;"></i>
+            VERIFIED PROTOCOL RECEIPT
+          </span>
+          <h3 id="modalReceiptTitle">RCP_TRANSACTA_98412</h3>
+        </div>
+        <button id="closeReceiptModalBtn" class="receipt-close-btn">
+          <i data-lucide="x" style="width: 18px; height: 18px;"></i>
+        </button>
+      </div>
+
+      <div class="receipt-modal-body">
+        <div class="receipt-row-meta">
+          <div>
+            <span class="meta-label">Payment ID:</span>
+            <code id="modalPaymentId">pay_Rzp982xAlpha</code>
+          </div>
+          <div>
+            <span class="meta-label">Status:</span>
+            <strong style="color: #16a34a;">SETTLED &amp; CONFIRMED</strong>
+          </div>
+        </div>
+
+        <div class="receipt-item-details">
+          <div class="receipt-line-item">
+            <strong id="modalProductTitle">Agreed Item</strong>
+            <span id="modalBasePrice">₹0</span>
+          </div>
+          <div id="modalBundleList" class="modal-bundle-list">
+          </div>
+          <div class="receipt-divider"></div>
+          <div class="receipt-total-row">
+            <span>Settled Amount</span>
+            <strong class="receipt-total-price" id="modalTotalAmount">₹19,999</strong>
+          </div>
+        </div>
+
+        <div class="receipt-crypto-seal-box">
+          <div class="seal-title">
+            <i data-lucide="key" style="width: 13px; height: 13px; color: var(--vana-blue);"></i>
+            <span>HMAC-SHA256 Cryptographic Settlement Seal</span>
+          </div>
+          <div class="seal-hash" id="modalSealHash">
+            e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+          </div>
+        </div>
+      </div>
+
+      <div class="receipt-modal-footer">
+        <a id="downloadTaxInvoiceBtn" href="/invoice" target="_blank" class="btn-walkaway-test" style="font-size: 13px; text-decoration: none; padding: 0.55rem 1.25rem;">
+          <i data-lucide="file-text" style="width: 15px; height: 15px; color: #0284c7;"></i>
+          <span>Official Tax Invoice</span>
+        </a>
+        <button id="copySealBtn" class="btn-walkaway-test" style="padding: 0.55rem 1.15rem;">
+          <i data-lucide="copy" style="width: 14px; height: 14px;"></i>
+          <span>Copy Seal</span>
+        </button>
+        <button id="dismissReceiptBtn" class="btn-razorpay-checkout" style="padding: 0.55rem 1.4rem; font-size: 13px;">
+          <span>Done</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Authentic Razorpay Desktop Checkout Modal -->
+  <div class="receipt-modal-backdrop" id="razorpayModalBackdrop" style="z-index: 10001;">
+    <div class="rzp-modal-card-actual">
+      <!-- Test Mode Diagonal Corner Ribbon -->
+      <div class="rzp-ribbon-test">Test Mode</div>
+
+      <!-- Close Button -->
+      <button id="closeRzpModalBtn" class="rzp-close-btn-actual" title="Close Checkout">
+        <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+      </button>
+
+      <!-- Centered Razorpay Header with Shield Logo -->
+      <div class="rzp-card-header-center">
+        <div class="rzp-shield-container">
+          <svg width="74" height="88" viewBox="0 0 88 104" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M44 0L88 14.5V48.5C88 78.5 68.5 98.5 44 104C19.5 98.5 0 78.5 0 48.5V14.5L44 0Z" fill="url(#rzpBlueGradActual)" />
+            <path d="M36 28L24 58H36L30 76L62 46H48L53 28H36Z" fill="#ffffff" />
+            <defs>
+              <linearGradient id="rzpBlueGradActual" x1="0" y1="0" x2="88" y2="104" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#1d4ed8" />
+                <stop offset="1" stop-color="#0284c7" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        <div style="margin-top: 0.85rem; text-align: center;">
+          <div style="display: inline-flex; align-items: center; gap: 0.4rem; background: #f1f5f9; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 0.4rem;">
+            <span>Transacta Protocol</span> • <span id="rzpModalProductDesc">GearCraft Studios</span>
+          </div>
+          <div class="rzp-amount-val-center" id="rzpModalAmountDisplay">₹19,999</div>
+        </div>
+      </div>
+
+      <!-- Payment Methods Grid & Options -->
+      <div class="rzp-card-body-center">
+        <div style="font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
+          Select Payment Method
+        </div>
+
+        <div class="rzp-methods-container">
+          <!-- UPI Option -->
+          <label class="rzp-method-option selected">
+            <div style="display: flex; align-items: center; gap: 0.85rem;">
+              <input type="radio" name="rzpPaymentMethod" value="UPI" checked>
+              <div>
+                <strong style="font-size: 14px; color: #0f172a; display: block;">UPI (Google Pay, PhonePe, Paytm, QR)</strong>
+                <span style="font-size: 12px; color: #64748b;">Instant zero-fee transfer via Virtual Payment Address or QR</span>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.35rem; font-size: 11px; font-weight: 800; color: #059669; background: #ecfdf5; padding: 0.25rem 0.6rem; border-radius: 6px;">
+              <i data-lucide="zap" style="width: 13px; height: 13px;"></i>
+              FASTEST
+            </div>
+          </label>
+
+          <!-- Cards Option -->
+          <label class="rzp-method-option">
+            <div style="display: flex; align-items: center; gap: 0.85rem;">
+              <input type="radio" name="rzpPaymentMethod" value="Card">
+              <div>
+                <strong style="font-size: 14px; color: #0f172a; display: block;">Credit / Debit Card</strong>
+                <span style="font-size: 12px; color: #64748b;">Visa, MasterCard, RuPay, Corporate Cards</span>
+              </div>
+            </div>
+            <i data-lucide="credit-card" style="width: 20px; height: 20px; color: #64748b;"></i>
+          </label>
+
+          <!-- Netbanking Option -->
+          <label class="rzp-method-option">
+            <div style="display: flex; align-items: center; gap: 0.85rem;">
+              <input type="radio" name="rzpPaymentMethod" value="NetBanking">
+              <div>
+                <strong style="font-size: 14px; color: #0f172a; display: block;">Netbanking</strong>
+                <span style="font-size: 12px; color: #64748b;">All Indian Banks (HDFC, ICICI, SBI, Axis, Kotak)</span>
+              </div>
+            </div>
+            <i data-lucide="building" style="width: 20px; height: 20px; color: #64748b;"></i>
+          </label>
+        </div>
+
+        <!-- Action Button -->
+        <button id="rzpModalPayBtn" class="rzp-btn-pay-actual" style="margin-top: 0.5rem;">
+          <i data-lucide="lock" style="width: 18px; height: 18px;"></i>
+          <span id="rzpModalPayBtnText">Pay with Razorpay</span>
+        </button>
+
+        <!-- Centered Secured By Razorpay Footer -->
+        <div class="rzp-secured-by-footer">
+          <span style="color: #64748b; font-size: 12.5px; font-weight: 600;">Secured By</span>
+          <div style="display: inline-flex; align-items: center; gap: 5px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L2 22H7.5L12 12L16.5 22H22L12 2Z" fill="#0c2340"/>
+              <path d="M12 2L16.5 22H11.5L8.5 16L12 2Z" fill="#0284c7"/>
+            </svg>
+            <span style="font-family: 'Sora', sans-serif; font-size: 15px; font-weight: 800; font-style: italic; color: #0c2340; letter-spacing: -0.02em;">Razorpay</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Universal In-App Notification Toast Container -->
+  <div class="inapp-toast-container" id="inAppToastContainer"></div>
+
+  <!-- User Name Onboarding & Profile Modal -->
+  <div class="receipt-modal-backdrop" id="userOnboardModalBackdrop" style="z-index: 10005;">
+    <div class="receipt-modal-card" style="max-width: 440px; padding: 2.25rem 2rem; text-align: center; border-radius: 24px; position: relative;">
+      <!-- Modal Close Button -->
+      <button type="button" id="closeUserModalBtn" style="position: absolute; top: 1.2rem; right: 1.2rem; background: none; border: none; cursor: pointer; color: #94a3b8; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" onmouseover="this.style.color='#0f172a'; this.style.backgroundColor='#f1f5f9';" onmouseout="this.style.color='#94a3b8'; this.style.backgroundColor='transparent';" title="Close">
+        <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+      </button>
+
+      <div style="width: 52px; height: 52px; border-radius: 50%; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem;">
+        <i data-lucide="user-check" style="width: 26px; height: 26px;"></i>
+      </div>
+      <h3 style="font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem; letter-spacing: -0.02em;">Welcome to Transacta</h3>
+      <p style="font-size: 14px; color: #64748b; line-height: 1.5; margin-bottom: 1.5rem;">
+        Enter your name to deploy your personal AI buyer agent. Your session and negotiated deals will be remembered on this device.
+      </p>
+      <form id="userOnboardForm" style="display: flex; flex-direction: column; gap: 1rem;">
+        <input type="text" id="userOnboardInput" required placeholder="Enter your full name..." style="width: 100%; border: 1.5px solid #cbd5e1; outline: none; padding: 0.75rem 1.25rem; font-family: 'Outfit', sans-serif; font-size: 15px; border-radius: 12px; transition: border-color 0.2s;" onfocus="this.style.borderColor='var(--vana-blue)'" onblur="this.style.borderColor='#cbd5e1'">
+        <button type="submit" class="btn-blue btn-razorpay-checkout" style="width: 100%; padding: 0.85rem; font-size: 15px; border-radius: 12px; justify-content: center; background-color: var(--vana-blue); color: #ffffff; border: 1px solid var(--vana-blue); box-shadow: 0 4px 16px rgba(0, 102, 255, 0.28);">
+          <span>Deploy My Buyer Agent</span>
+          <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- User Past Deals History Drawer / Modal -->
+  <div class="receipt-modal-backdrop" id="dealHistoryDrawerBackdrop" style="z-index: 10004;">
+    <div class="receipt-modal-card" style="max-width: 1040px; width: 94vw; max-height: 88vh; display: flex; flex-direction: column; border-radius: 24px;">
+      <div class="receipt-modal-header" style="align-items: center; padding: 1.25rem 1.5rem;">
+        <div style="display: flex; align-items: center; gap: 0.65rem;">
+          <div style="width: 36px; height: 36px; border-radius: 10px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center;">
+            <i data-lucide="history" style="width: 18px; height: 18px;"></i>
+          </div>
+          <div>
+            <h4 style="margin: 0; font-size: 17px; font-weight: 800; color: #0f172a;">My Negotiated Deals</h4>
+            <span style="font-size: 12px; color: #64748b;" id="historyUserSubtitle">Saved on this device</span>
+          </div>
+        </div>
+        <button id="closeHistoryModalBtn" style="background: none; border: none; cursor: pointer; color: #64748b; padding: 4px;" title="Close History">
+          <i data-lucide="x" style="width: 20px; height: 20px;"></i>
+        </button>
+      </div>
+
+      <div id="dealHistoryListContainer" style="overflow-y: auto; padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 0.85rem; flex: 1;">
+        <!-- Dynamically populated deal cards -->
+      </div>
+
+      <div style="padding: 1rem 1.5rem; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; background: #fafafa; gap: 0.5rem; flex-wrap: wrap;">
+        <span style="font-size: 12.5px; color: #64748b; font-weight: 500;" id="totalSavedSummaryText">Total saved: ₹0</span>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <button id="clearHistoryBtn" class="btn-walkaway-test" style="font-size: 13px; padding: 0.45rem 0.95rem; border-radius: 8px; color: #ef4444; border-color: #fecaca; background: #ffffff;">
+            <i data-lucide="trash-2" style="width: 13px; height: 13px; display: inline-block; vertical-align: middle; margin-right: 3px;"></i>
+            <span>Clear History</span>
+          </button>
+          <button id="dismissHistoryBtn" class="btn-walkaway-test" style="font-size: 13px; padding: 0.45rem 1.1rem; border-radius: 8px;">
+            <span>Close</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="negotiation.js"></script>
+</body>
+</html>

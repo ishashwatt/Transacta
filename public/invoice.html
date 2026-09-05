@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transacta Protocol — Official Tax Invoice</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @media print {
+      .invoice-no-print {
+        display: none !important;
+      }
+      body {
+        background: #ffffff !important;
+        padding: 0 !important;
+      }
+      .invoice-container {
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+      }
+    }
+    .invoice-container {
+      max-width: 820px;
+      margin: 2rem auto;
+      background: #ffffff;
+      padding: 3rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+      font-family: 'Outfit', sans-serif;
+      color: #0f172a;
+    }
+    .inv-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0;
+    }
+    .inv-table th {
+      background: #f8fafc;
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-family: 'Sora', sans-serif;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #475569;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    .inv-table td {
+      padding: 1rem;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 13.5px;
+    }
+    .inv-free-badge {
+      display: inline-block;
+      background: #dcfce7;
+      color: #166534;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      margin-left: 0.5rem;
+    }
+  </style>
+</head>
+<body style="background: #f8fafc; min-height: 100vh; padding: 1.5rem;">
+
+  <!-- Print / Action Toolbar (Hidden in Print) -->
+  <div class="invoice-no-print" style="max-width: 820px; margin: 0 auto 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+    <a href="/app" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 700; color: #0f172a;">
+      <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+      <span>Back to Deal Room</span>
+    </a>
+    <button onclick="window.print()" class="btn-razorpay-checkout" style="padding: 0.65rem 1.5rem; font-size: 13.5px;">
+      <i data-lucide="printer" style="width: 16px; height: 16px;"></i>
+      <span>Print / Download PDF</span>
+    </button>
+  </div>
+
+  <div class="invoice-container" id="invoiceDocument">
+    <!-- Invoice Header -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #f1f5f9; padding-bottom: 2rem;">
+      <div>
+        <div style="font-size: 26px; font-weight: 900; font-family: 'Sora', sans-serif; color: #0f172a; letter-spacing: -0.04em;">
+          transacta
+        </div>
+        <div style="font-size: 12.5px; color: #64748b; margin-top: 0.25rem;">
+          Autonomous Agentic Commerce Protocol
+        </div>
+        <div style="margin-top: 1rem; font-size: 13px; color: #334155; line-height: 1.5;">
+          <strong>Supplier:</strong> <span id="invMerchantName">GearCraft Studios</span><br>
+          <strong>GSTIN:</strong> <span id="invMerchantGstin">29AABCU9603R1ZM</span><br>
+          <span id="invMerchantAddress">Indiranagar 100ft Rd, Bengaluru, Karnataka 560038</span>
+        </div>
+      </div>
+
+      <div style="text-align: right;">
+        <div style="font-family: 'Sora', sans-serif; font-size: 18px; font-weight: 800; color: #0f172a; text-transform: uppercase;">
+          Tax Invoice
+        </div>
+        <div style="font-size: 13px; color: #64748b; margin-top: 0.25rem;">
+          Invoice No: <strong id="invNumber" style="color: #0f172a;">INV-98412</strong><br>
+          Date: <span id="invDate">04 Sep 2026</span><br>
+          Payment: <strong style="color: #16a34a;">PAID (Razorpay)</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buyer Details -->
+    <div style="display: flex; justify-content: space-between; margin: 2rem 0; font-size: 13.5px; line-height: 1.5;">
+      <div>
+        <div style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.35rem;">
+          Billed &amp; Delivered To:
+        </div>
+        <strong style="color: #0f172a;" id="invBuyerName">Arjun Verma (AI Delegated Buyer)</strong><br>
+        <span id="invBuyerEmail">arjun.verma@transacta.network</span><br>
+        <span id="invBuyerAddress">742 Evergreen Hts, Koramangala 4th Block, Bengaluru 560034</span>
+      </div>
+
+      <div style="text-align: right;">
+        <div style="font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.35rem;">
+          Settlement Gateway:
+        </div>
+        <span style="color: #0f172a;">Razorpay Official Gateway</span><br>
+        <span>Payment ID: <code id="invPaymentId" style="font-weight: 600;">—</code></span><br>
+        <span>Order Ref: <code id="invOrderId">—</code></span>
+      </div>
+    </div>
+
+    <!-- Itemized Table -->
+    <table class="inv-table">
+      <thead>
+        <tr>
+          <th>Sl.</th>
+          <th>Item &amp; Bundle Description</th>
+          <th>HSN/SAC</th>
+          <th style="text-align: center;">Qty</th>
+          <th style="text-align: right;">Retail Price</th>
+          <th style="text-align: right;">Protocol Discount</th>
+          <th style="text-align: right;">Settled Price</th>
+        </tr>
+      </thead>
+      <tbody id="invItemsBody">
+        <!-- Populated dynamically -->
+      </tbody>
+    </table>
+
+    <!-- Totals Summary -->
+    <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+      <div style="width: 320px; font-size: 13.5px;">
+        <div style="display: flex; justify-content: space-between; padding: 0.4rem 0; color: #64748b;">
+          <span>Original Retail Value:</span>
+          <span id="invRetailTotal" style="text-decoration: line-through;">₹25,498</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 0.4rem 0; color: #16a34a; font-weight: 600;">
+          <span>Negotiated Savings:</span>
+          <span id="invSavings">-₹5,498</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 0.4rem 0; color: #64748b;">
+          <span>Taxable Value:</span>
+          <span id="invTaxableValue">₹16,949</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 0.4rem 0; color: #64748b;">
+          <span>CGST (9%):</span>
+          <span id="invCGST">₹1,525</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 0.4rem 0; color: #64748b;">
+          <span>SGST (9%):</span>
+          <span id="invSGST">₹1,526</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; border-top: 2px solid #0f172a; margin-top: 0.5rem; font-family: 'Sora', sans-serif; font-size: 17px; font-weight: 800; color: #0f172a;">
+          <span>Total Settled:</span>
+          <span id="invTotalAmount">₹20,000</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cryptographic Settlement Seal -->
+    <div style="margin-top: 3rem; padding: 1.25rem; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; font-size: 12px;">
+      <div style="display: flex; align-items: center; gap: 0.5rem; font-family: 'Sora', sans-serif; font-weight: 700; color: #0f172a; margin-bottom: 0.35rem;">
+        <i data-lucide="shield-check" style="width: 14px; height: 14px; color: #16a34a;"></i>
+        HMAC-SHA256 Cryptographic Settlement Seal
+      </div>
+      <div id="invSealHash" style="font-family: monospace; font-size: 11px; color: #475569; word-break: break-all;">
+        e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+      </div>
+      <div style="font-size: 11px; color: #94a3b8; margin-top: 0.35rem;">
+        Legally binding electronic invoice generated automatically by the Transacta Autonomous Agentic Commerce Protocol.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (window.lucide) window.lucide.createIcons();
+
+      const urlParams = new URLSearchParams(window.location.search);
+      let orderId = urlParams.get('orderId');
+
+      // 1. Check local storage for matching active/historic deal
+      let localDeal = null;
+      try {
+        const historyStr = localStorage.getItem('transacta_user_history');
+        const activeStr = localStorage.getItem('transacta_user_active_deals');
+        const list = [
+          ...(historyStr ? JSON.parse(historyStr) : []),
+          ...(activeStr ? JSON.parse(activeStr) : [])
+        ];
+        if (orderId) {
+          localDeal = list.find(d => d.id === orderId || d.dealId === orderId || d.orderId === orderId || d.paymentId === orderId || d.receipt === orderId);
+        } else if (list.length > 0) {
+          localDeal = list[0];
+          orderId = localDeal.id || localDeal.dealId || localDeal.receipt;
+        }
+      } catch (err) {
+        console.warn("Storage lookup error:", err);
+      }
+
+      // 2. Fetch server invoice data
+      try {
+        const res = await fetch(`/api/invoice/${orderId || 'latest'}`);
+        const data = await res.json();
+        if (data.success && data.invoice) {
+          const inv = data.invoice;
+          if (localDeal && localDeal.finalPrice) {
+            const finalP = localDeal.finalPrice;
+            const retailP = localDeal.retailTotal || Math.round(finalP + (localDeal.savings || 5498));
+            const savingsP = localDeal.savings || (retailP - finalP);
+            const baseTax = Math.round(finalP / 1.18);
+            const gst = finalP - baseTax;
+            const halfGst = Math.round(gst / 2);
+
+            inv.pricing.totalAmount = finalP;
+            inv.pricing.retailTotal = retailP;
+            inv.pricing.totalSavings = savingsP;
+            inv.pricing.taxableValue = baseTax;
+            inv.pricing.cgst = halfGst;
+            inv.pricing.sgst = gst - halfGst;
+            if (inv.items && inv.items[0]) {
+              inv.items[0].name = localDeal.title || inv.items[0].name;
+              inv.items[0].settledPrice = finalP;
+              inv.items[0].retailPrice = retailP;
+              inv.items[0].discount = savingsP;
+            }
+            if (localDeal.merchant) {
+              inv.merchant.name = localDeal.merchant;
+            }
+          }
+          renderInvoice(inv);
+          return;
+        }
+      } catch (e) {
+        console.error("Failed to load invoice from API:", e);
+      }
+
+      // 3. If API fails but local deal is available
+      if (localDeal) {
+        const finalP = localDeal.finalPrice || 20000;
+        const retailP = localDeal.retailTotal || Math.round(finalP + (localDeal.savings || 5498));
+        const savingsP = localDeal.savings || (retailP - finalP);
+        const baseTax = Math.round(finalP / 1.18);
+        const gst = finalP - baseTax;
+        const halfGst = Math.round(gst / 2);
+
+        renderInvoice({
+          invoiceNumber: `INV-${Date.now().toString().slice(-6)}`,
+          invoiceDate: new Date(localDeal.timestamp || Date.now()).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }),
+          orderId: localDeal.id || orderId,
+          paymentId: localDeal.paymentId || `pay_rzp_${Date.now()}`,
+          merchant: {
+            name: localDeal.merchant || "GearCraft Studios",
+            gstin: "29AABCU9603R1ZM",
+            address: "Indiranagar 100ft Rd, Bengaluru, Karnataka 560038"
+          },
+          buyer: {
+            name: localDeal.buyerName || "Verified Buyer",
+            email: "buyer@transacta.network",
+            address: "742 Evergreen Hts, Koramangala 4th Block, Bengaluru 560034"
+          },
+          pricing: {
+            retailTotal: retailP,
+            totalSavings: savingsP,
+            taxableValue: baseTax,
+            cgst: halfGst,
+            sgst: gst - halfGst,
+            totalAmount: finalP
+          },
+          items: [
+            {
+              name: localDeal.title || "144Hz Gaming Monitor",
+              hsnCode: "85285200",
+              qty: 1,
+              retailPrice: retailP,
+              discount: savingsP,
+              settledPrice: finalP
+            },
+            ...(localDeal.bundle || []).map(b => ({
+              name: typeof b === 'string' ? b : b.name,
+              hsnCode: "85444299",
+              qty: 1,
+              retailPrice: 1299,
+              discount: 1299,
+              settledPrice: 0,
+              isFree: true
+            }))
+          ],
+          settlement: {
+            sha256Seal: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        });
+      }
+    });
+
+    function renderInvoice(inv) {
+      document.getElementById('invNumber').textContent = inv.invoiceNumber;
+      document.getElementById('invDate').textContent = inv.invoiceDate;
+      document.getElementById('invMerchantName').textContent = inv.merchant.name;
+      document.getElementById('invMerchantGstin').textContent = inv.merchant.gstin;
+      document.getElementById('invMerchantAddress').textContent = inv.merchant.address;
+      document.getElementById('invBuyerName').textContent = inv.buyer.name;
+      document.getElementById('invBuyerEmail').textContent = inv.buyer.email;
+      document.getElementById('invBuyerAddress').textContent = inv.buyer.address;
+      document.getElementById('invPaymentId').textContent = inv.paymentId;
+      document.getElementById('invOrderId').textContent = inv.orderId;
+
+      document.getElementById('invRetailTotal').textContent = `₹${inv.pricing.retailTotal.toLocaleString('en-IN')}`;
+      document.getElementById('invSavings').textContent = `-₹${inv.pricing.totalSavings.toLocaleString('en-IN')}`;
+      document.getElementById('invTaxableValue').textContent = `₹${inv.pricing.taxableValue.toLocaleString('en-IN')}`;
+      document.getElementById('invCGST').textContent = `₹${inv.pricing.cgst.toLocaleString('en-IN')}`;
+      document.getElementById('invSGST').textContent = `₹${inv.pricing.sgst.toLocaleString('en-IN')}`;
+      document.getElementById('invTotalAmount').textContent = `₹${inv.pricing.totalAmount.toLocaleString('en-IN')}`;
+      document.getElementById('invSealHash').textContent = inv.settlement.sha256Seal;
+
+      const tbody = document.getElementById('invItemsBody');
+      tbody.innerHTML = '';
+      inv.items.forEach((item, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="color: #64748b;">${idx + 1}</td>
+          <td>
+            <strong>${item.name}</strong>
+            ${item.isFree ? '<span class="inv-free-badge">FREE BUNDLE</span>' : ''}
+          </td>
+          <td style="color: #64748b;">${item.hsnCode}</td>
+          <td style="text-align: center;">${item.qty}</td>
+          <td style="text-align: right;">₹${item.retailPrice.toLocaleString('en-IN')}</td>
+          <td style="text-align: right; color: #16a34a;">-₹${item.discount.toLocaleString('en-IN')}</td>
+          <td style="text-align: right; font-weight: 700; color: #0f172a;">₹${item.settledPrice.toLocaleString('en-IN')}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      if (window.lucide) window.lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

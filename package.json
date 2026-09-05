@@ -1,0 +1,25 @@
+{
+  "name": "transacta-agentic-commerce",
+  "version": "1.0.0",
+  "description": "Transacta — Discover. Decide. Transact. Agentic Commerce Gateway for Razorpay (Track 01)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "razorpay",
+    "agentic-commerce",
+    "npci-uap",
+    "buildathon",
+    "ai-agent",
+    "payments"
+  ],
+  "author": "Transacta Team",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  }
+}

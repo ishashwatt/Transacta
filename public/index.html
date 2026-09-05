@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transacta — Where AI Buyers &amp; Merchants Do Business</title>
+  <meta name="description" content="Autonomous Agentic Commerce Protocol for Razorpay. Buyer Agent ↔ Transacta ↔ Multi-Merchant Negotiation with Dynamic Bundling & Walk-Away Intelligence.">
+  <link rel="stylesheet" href="styles.css">
+  <!-- Google Fonts for Playfair Serif & Inter Tight -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@1,400;1,600&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Razorpay Official Checkout SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+
+  <div class="app-wrapper">
+
+    <header class="vana-navbar">
+      <div class="vana-logo-wrapper">
+        <a href="#" class="vana-logo">transacta</a>
+        <span class="navbar-logo-separator"></span>
+        <div class="navbar-rzp-collab">
+          <span class="rzp-collab-label">Powered by</span>
+          <img src="assets/razorpay-full-logo.svg" alt="Razorpay" class="navbar-rzp-logo">
+        </div>
+      </div>
+
+      <nav class="navbar-nav">
+        <a class="nav-link" data-scroll="how-it-works">How it works</a>
+        <a class="nav-link" href="/app">Deal Room</a>
+        <a class="nav-link" href="/vendor">Merchant Console</a>
+        <a class="nav-link" data-scroll="protocol">Protocol</a>
+        <a class="nav-link" data-scroll="faq">FAQ</a>
+      </nav>
+
+      <button id="navLaunchBtn" class="btn-blue" onclick="window.location.href='/app'">
+        <span>Start Transacting</span>
+        <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+      </button>
+    </header>
+
+    <section class="hero-section">
+      <h1 class="hero-heading">
+        Your budget.<br>Your rules.
+      </h1>
+      <p class="hero-subtext">
+        Where AI buyer agents discover verified sellers across India, negotiate lower prices and free bundles in real time, and settle safely on Razorpay.
+      </p>
+
+      <div class="hero-search-wrapper">
+        <div class="hero-input-form">
+          <input type="text" id="buyerQueryInput" class="hero-input" placeholder="" autocomplete="off">
+          <button id="startProtocolBtn" class="btn-blue">
+            <span>Start Transacting</span>
+            <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+          </button>
+        </div>
+
+        <div class="search-dropdown-menu" id="searchDropdownMenu">
+          <div class="dropdown-item" data-q="Find me a 144Hz gaming monitor under 20000 rupees" data-budget="20000">
+            <div class="dropdown-item-content">
+              <div class="dropdown-title">144Hz gaming monitor under 20000 rupees</div>
+              <div class="dropdown-desc">High refresh rate display with low latency and warranty negotiation</div>
+            </div>
+            <i data-lucide="corner-down-left" class="dropdown-icon"></i>
+          </div>
+          <div class="dropdown-item" data-q="Wireless mechanical keyboard under 8000 rupees" data-budget="8000">
+            <div class="dropdown-item-content">
+              <div class="dropdown-title">Wireless mechanical keyboard under 8000 rupees</div>
+              <div class="dropdown-desc">Hot swappable switches with coiled cable bundle</div>
+            </div>
+            <i data-lucide="corner-down-left" class="dropdown-icon"></i>
+          </div>
+          <div class="dropdown-item" data-q="Studio condenser microphone under 12000 rupees" data-budget="12000">
+            <div class="dropdown-item-content">
+              <div class="dropdown-title">Studio condenser microphone under 12000 rupees</div>
+              <div class="dropdown-desc">Cardioid broadcast microphone with boom arm and shock mount bundle</div>
+            </div>
+            <i data-lucide="corner-down-left" class="dropdown-icon"></i>
+          </div>
+          <div class="dropdown-item" data-q="Budget monitor under 15000 rupees for quick test" data-budget="15000">
+            <div class="dropdown-item-content">
+              <div class="dropdown-title">Budget monitor under 15000 rupees for quick test</div>
+              <div class="dropdown-desc">Automated reservation boundary test demonstrating walk away intelligence</div>
+            </div>
+            <i data-lucide="corner-down-left" class="dropdown-icon"></i>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Razorpay Ecosystem Trust Strip -->
+      <div class="hero-rzp-trust-strip">
+        <div class="rzp-trust-badge">
+          <img src="assets/razorpay-icon.svg" alt="Razorpay Logo" class="rzp-badge-icon">
+          <span>Settled safely via <strong>Razorpay Trusted Gateway</strong> · Instant UPI Mandates · RBI Tokenized Vault · Smart Escrow Settlement</span>
+        </div>
+      </div>
+
+      <div class="hero-carousel-container" id="heroCarousel">
+        <div class="hero-carousel-slides">
+          <div class="hero-slide active">
+            <img src="assets/hero-slide-1.png" alt="Autonomous Commerce Discovery">
+            <div class="hero-slide-caption">
+              <span class="slide-tag">Autonomous Discovery</span>
+              <h3>AI Agents scouting live merchant markets in parallel</h3>
+            </div>
+          </div>
+          <div class="hero-slide">
+            <img src="assets/hero-slide-2.png" alt="Dynamic Negotiation Protocol">
+            <div class="hero-slide-caption">
+              <span class="slide-tag">Smart Negotiation</span>
+              <h3>Dynamic value bundling balancing price, speed, and warranty</h3>
+            </div>
+          </div>
+          <div class="hero-slide">
+            <img src="assets/hero-slide-3.png" alt="Instant Razorpay Settlement">
+            <div class="hero-slide-caption">
+              <span class="slide-tag">Instant Settlement</span>
+              <h3>Cryptographic vault authorization with zero human friction</h3>
+            </div>
+          </div>
+          <div class="hero-slide">
+            <img src="assets/hero-slide-4.png" alt="Decentralized Fulfillment Network">
+            <div class="hero-slide-caption">
+              <span class="slide-tag">Fulfillment Network</span>
+              <h3>Verified merchant network delivering autonomous trade at scale</h3>
+            </div>
+          </div>
+          <div class="hero-slide">
+            <img src="assets/hero-slide-5.png" alt="Protocol Handshake">
+            <div class="hero-slide-caption">
+              <span class="slide-tag">Protocol Handshake</span>
+              <h3>Where AI buyers and merchants do business</h3>
+            </div>
+          </div>
+        </div>
+        <div class="hero-carousel-controls">
+          <button class="carousel-dot active" data-index="0" aria-label="Slide 1"></button>
+          <button class="carousel-dot" data-index="1" aria-label="Slide 2"></button>
+          <button class="carousel-dot" data-index="2" aria-label="Slide 3"></button>
+          <button class="carousel-dot" data-index="3" aria-label="Slide 4"></button>
+          <button class="carousel-dot" data-index="4" aria-label="Slide 5"></button>
+        </div>
+      </div>
+    </section>
+
+    <section id="how-it-works" class="section-title-wrap">
+      <h2 class="section-title-lg">So, how does Transacta work?</h2>
+    </section>
+
+    <div class="step-row-2col">
+      <div class="step-content-col">
+        <div class="step-pill-badge">01. Discovery</div>
+        <h3 class="step-heading">Parallel Market Scouting.</h3>
+        <p class="step-desc">
+          Tell your AI what you want to buy, and it checks multiple trusted stores at the same time to find real in-stock items, compare prices, and check seller reviews.
+        </p>
+        <ul class="step-points-list">
+          <li class="step-point-item">
+            <span class="point-bullet"></span>
+            <div><strong>No Manual Searching:</strong> Compares hundreds of products, tech specs, and store prices in just a few seconds.</div>
+          </li>
+          <li class="step-point-item">
+            <span class="point-bullet"></span>
+            <div><strong>Trusted Sellers Only:</strong> Connects only with verified merchants who have high ratings and fast delivery records.</div>
+          </li>
+          <li class="step-point-item">
+            <span class="point-bullet"></span>
+            <div><strong>Fair Comparisons:</strong> Automatically ranks every store offer by total price, warranty coverage, and shipping speed.</div>
+          </li>
+        </ul>
+      </div>
+      <div class="step-visual-col">
+        <img src="assets/step-1.png" alt="Parallel Market Scouting">
+      </div>
+    </div>
+
+    <!-- Soft Fading Divider -->
+    <div class="step-divider-fade"></div>
+
+    <div class="step-row-2col">
+      <div class="step-visual-col">
+        <img src="assets/step-2.png" alt="Dynamic Value Bundling">
+      </div>
+      <div class="step-content-col">
+        <div class="step-pill-badge">02. Negotiation</div>
+        <h3 class="step-heading">Value Beyond Discounts.</h3>
+        <p class="step-desc">
+          If a store cannot lower its price any further, your agent negotiates extra perks—like free accessories, faster shipping, or extended warranties.
+        </p>
+        <ul class="step-points-list">
+          <li class="step-point-item">
+            <span class="point-bullet"></span>
+            <div><strong>Instant Back-and-Forth:</strong> Your agent talks directly with the store's system to get you the lowest possible price.</div>
+          </li>
+          <li class="step-point-item">
+            <span class="point-bullet"></span>
+            <div><strong>Free Bonus Items:</strong> Gets extra value like premium cables, carrying cases, or extra protection plans included for free.</div>
+          </li>
+          <li class="step-point-item">
+            <span class="point-bullet"></span>
+            <div><strong>Win-Win Deals:</strong> Stores protect their margins while you walk away with a much better overall deal.</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Soft Fading Divider -->
+    <div class="step-divider-fade"></div>
+
+    <div class="step-row-2col">
+      <div class="step-content-col">
+        <div class="step-pill-badge">03. Settlement</div>
+        <h3 class="step-heading">Absolute Protection, Instant Settlement.</h3>
+        <p class="step-desc">
+          You set your maximum spending limit before starting. If sellers cannot meet your terms, your agent safely walks away—you never overpay.
+        </p>
+        <ul class="step-points-list">
+          <li class="step-point-item">
+            <span class="point-bullet"></span>
+            <div><strong>Strict Spending Limit:</strong> Your money stays safe. The agent cannot spend a single rupee over your set budget.</div>
+          </li>
+          <li class="step-point-item">
+            <span class="point-bullet"></span>
+            <div><strong>Clear Decision Logs:</strong> See exactly why a deal was accepted or why the agent walked away in plain words.</div>
+          </li>
+          <li class="step-point-item">
+            <span class="point-bullet"></span>
+            <div><strong>Secure Razorpay Checkout:</strong> Once a deal is finalized, payment is processed instantly and safely through Razorpay escrow.</div>
+          </li>
+        </ul>
+      </div>
+      <div class="step-visual-col">
+        <img src="assets/step-3.png" alt="Instant Settlement and Protection">
+      </div>
+    </div>
+
+
+
+    <!-- ====================================================================
+         5. PARTICIPATING MERCHANTS & RAZORPAY AUTONOMOUS COMMERCE
+         ==================================================================== -->
+    <section id="merchants" class="merchants-showcase-section">
+      <div style="text-align: center; margin-bottom: 3rem;">
+        <div class="step-pill-badge" style="margin: 0 auto 0.85rem;">Participating Merchants</div>
+        <h2 style="font-size: clamp(32px, 4vw, 46px); font-weight: 900; letter-spacing: -0.03em;">Verified Autonomous Sellers</h2>
+        <p style="color: var(--vana-text-muted); font-size: 16px; max-width: 740px; margin: 0.65rem auto 0; line-height: 1.6;">
+          Autonomous buyer agents negotiate real-time prices, unlock custom bundled value, and switch between competing sellers—settling payments securely and instantly via Razorpay.
+        </p>
+      </div>
+
+      <!-- 3 Columns: Smaller Compact Merchant Cards -->
+      <div class="merchants-grid compact">
+        
+        <!-- Merchant 1: CyberPulse Hardware -->
+        <div class="merchant-mini-card">
+          <div class="mini-card-header">
+            <div>
+              <h3 class="mini-merchant-name">CyberPulse Hardware</h3>
+              <span class="mini-merchant-sub">Mumbai · Consumer Electronics</span>
+            </div>
+            <span class="mini-rating-chip">★ 4.9</span>
+          </div>
+          <ul class="mini-points-list">
+            <li><img src="assets/razorpay-icon.svg" class="rzp-mini-icon" alt="Razorpay"> Verified Razorpay Merchant</li>
+            <li>Autonomous Seller Bot (24/7 Bidding)</li>
+            <li>Express 2-Day Priority Dispatch</li>
+          </ul>
+        </div>
+
+        <!-- Merchant 2: GearCraft Studios -->
+        <div class="merchant-mini-card">
+          <div class="mini-card-header">
+            <div>
+              <h3 class="mini-merchant-name">GearCraft Studios</h3>
+              <span class="mini-merchant-sub">Hyderabad · Pro Studio Hardware</span>
+            </div>
+            <span class="mini-rating-chip">★ 4.95</span>
+          </div>
+          <ul class="mini-points-list">
+            <li><img src="assets/razorpay-icon.svg" class="rzp-mini-icon" alt="Razorpay"> Verified Razorpay Merchant</li>
+            <li>Multi-Round Margin &amp; Value Bundling</li>
+            <li>36-Month Extended Warranty Support</li>
+          </ul>
+        </div>
+
+        <!-- Merchant 3: Apex Displays India -->
+        <div class="merchant-mini-card">
+          <div class="mini-card-header">
+            <div>
+              <h3 class="mini-merchant-name">Apex Displays India</h3>
+              <span class="mini-merchant-sub">Bangalore · Direct Wholesale Tech</span>
+            </div>
+            <span class="mini-rating-chip">★ 4.8</span>
+          </div>
+          <ul class="mini-points-list">
+            <li><img src="assets/razorpay-icon.svg" class="rzp-mini-icon" alt="Razorpay"> Verified Razorpay Merchant</li>
+            <li>Volume Discount Schedules Enabled</li>
+            <li>Instant Razorpay Escrow &amp; Refunds</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Middle Divider Line: Refined text -->
+      <div class="merchants-divider-container">
+        <div class="merchants-divider-line"></div>
+        <span class="merchants-plain-text">And a growing network of verified merchants across India</span>
+        <div class="merchants-divider-line"></div>
+      </div>
+
+      <!-- Merchant Console Onboarding Action -->
+      <div style="text-align: center; margin-top: 1.5rem; margin-bottom: 2rem;">
+        <a href="/vendor" class="btn-merchant-portal">
+          <span>Are you a seller? Onboard your store on the Merchant Console</span>
+          <i data-lucide="arrow-right" style="width: 15px; height: 15px;"></i>
+        </a>
+      </div>
+    </section>
+
+
+
+
+
+    <!-- ====================================================================
+         8. PROTOCOL ARCHITECTURE & RAZORPAY SETTLEMENT STACK
+         ==================================================================== -->
+    <section id="protocol" class="build-section">
+      <div class="build-section-header">
+        <div class="step-pill-badge" style="margin: 0 auto 0.85rem;">
+          <img src="assets/razorpay-icon.svg" alt="Razorpay" style="width: 14px; height: 14px; vertical-align: -2px; margin-right: 5px;">
+          Powered by Razorpay
+        </div>
+        <h2 class="build-section-title">How Transacta &amp; Razorpay Power Agentic Commerce</h2>
+        <p class="build-section-subtitle">
+          Autonomous buyer agents find and negotiate the best package deals, while Razorpay ensures every transaction is verified, safe, and settled in seconds.
+        </p>
+      </div>
+
+      <div class="build-grid">
+        <!-- Card 1: Agentic Negotiation Protocol -->
+        <div class="build-col">
+          <div class="build-col-badge-row">
+            <div class="build-icon-badge" style="background: #e0f2fe;">
+              <i data-lucide="sparkles" style="width: 20px; height: 20px; color: #0284c7;"></i>
+            </div>
+            <span class="build-col-pill" style="background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0;">Autonomous AI</span>
+          </div>
+          <h4>Smart Real-Time Bidding</h4>
+          <p>
+            Your AI agent negotiates directly with verified seller bots. It automatically compares competing offers, unlocks free bundled accessories, and lowers prices without any manual back-and-forth.
+          </p>
+          <div class="card-pills-row">
+            <span class="clean-pill">AI Negotiation</span>
+            <span class="clean-pill">Dynamic Bundles</span>
+            <span class="clean-pill">Multi-Merchant</span>
+          </div>
+          <a href="/app" class="build-link">Explore Live Deal Room <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i></a>
+        </div>
+
+        <!-- Card 2: Official Razorpay Settlement -->
+        <div class="build-col" style="border-color: #bfdbfe; background: linear-gradient(180deg, #ffffff 0%, #f8faff 100%);">
+          <div class="build-col-badge-row">
+            <div class="build-icon-badge" style="background: #e0e7ff;">
+              <img src="assets/razorpay-icon.svg" alt="Razorpay" style="width: 20px; height: 20px;">
+            </div>
+            <span class="build-col-pill" style="background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;">Razorpay Rails</span>
+          </div>
+          <h4>Instant &amp; Safe Checkout</h4>
+          <p>
+            As soon as both AI agents agree on the best price, a secure Razorpay order is generated immediately. Pay in 1 click using UPI, QR, or cards with automated signature verification.
+          </p>
+          <div class="card-pills-row">
+            <span class="clean-pill">Razorpay Orders</span>
+            <span class="clean-pill">UPI AutoPay</span>
+            <span class="clean-pill">Instant Settlement</span>
+          </div>
+          <a href="/vendor" class="build-link">Open Merchant Console <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i></a>
+        </div>
+
+        <!-- Card 3: Budget Protection & Safety Rails -->
+        <div class="build-col">
+          <div class="build-col-badge-row">
+            <div class="build-icon-badge" style="background: #fef3c7;">
+              <i data-lucide="shield-check" style="width: 20px; height: 20px; color: #d97706;"></i>
+            </div>
+            <span class="build-col-pill" style="background: #fffbeb; color: #b45309; border: 1px solid #fde68a;">Zero Overpay</span>
+          </div>
+          <h4>Guaranteed Budget Limits</h4>
+          <p>
+            The AI agent strictly follows your spending limits. If sellers cannot meet your reservation price, it walks away safely with zero unauthorized charges or hidden fees.
+          </p>
+          <div class="card-pills-row">
+            <span class="clean-pill">Budget Guardrails</span>
+            <span class="clean-pill">Walk-Away Logic</span>
+            <span class="clean-pill">Zero Overpay</span>
+          </div>
+          <a href="/app#audit" class="build-link">Inspect Audit Ledger <i data-lucide="arrow-right" style="width: 14px; height: 14px;"></i></a>
+        </div>
+      </div>
+
+      <!-- Soothing Verified Payment Rails & Standards Strip -->
+      <div class="soothing-rails-bar">
+        <div class="soothing-rails-intro">
+          <span class="soothing-rails-title">Integrated Financial Infrastructure</span>
+          <span class="soothing-rails-subtitle">Settling agentic commerce on verified Indian payment rails</span>
+        </div>
+        <div class="soothing-rails-pills">
+          <div class="clean-pill logo-pill">
+            <img src="assets/razorpay-icon.svg" alt="Razorpay" class="pill-logo-img">
+            <span>Razorpay</span>
+          </div>
+          <div class="clean-pill logo-pill">
+            <svg class="pill-logo-svg" viewBox="0 0 32 32" fill="none">
+              <path d="M19.5 5L26 16L19.5 27H13.5L17.5 16L13.5 5H19.5Z" fill="#0f9d58"/>
+              <path d="M11.5 5L18 16L11.5 27H5.5L9.5 16L5.5 5H11.5Z" fill="#f47920"/>
+            </svg>
+            <span>UPI AutoPay</span>
+          </div>
+          <div class="clean-pill logo-pill">
+            <svg class="pill-logo-svg" viewBox="0 0 24 24" fill="none" stroke="#002d62" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="20" height="14" x="2" y="5" rx="2"/>
+              <line x1="2" x2="22" y1="10" y2="10"/>
+            </svg>
+            <span>RuPay Cards</span>
+          </div>
+          <div class="clean-pill logo-pill">
+            <svg class="pill-logo-svg" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <span>HMAC SHA-256</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         10. LIME ACCORDION FAQ (Screenshot (149).png & (150).png)
+         ==================================================================== -->
+    <section id="faq" class="lime-faq-box">
+      <h2 class="faq-title">Frequently asked questions</h2>
+
+      <div class="faq-list">
+        <div class="faq-item open">
+          <button class="faq-question-btn">
+            <span>How is Transacta different from normal shopping chatbots?</span>
+            <i data-lucide="chevron-down" class="arrow-icon"></i>
+          </button>
+          <div class="faq-answer">
+            Normal chatbots only search products and send you links. Transacta has an AI buyer agent that actually talks to multiple sellers on your behalf, negotiates for the lowest price and free bundled accessories, and lets you pay safely through Razorpay.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question-btn">
+            <span>What is Dynamic Value Bundling?</span>
+            <i data-lucide="chevron-down" class="arrow-icon"></i>
+          </button>
+          <div class="faq-answer">
+            Sellers cannot reduce their cash price below their wholesale cost without taking a loss. When a seller hits their lowest cash price, Transacta asks them to add high-margin extras instead—such as an HDMI cable, mousepad, or extended warranty—giving you more total value for your budget.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question-btn">
+            <span>What happens if no seller can meet my budget?</span>
+            <i data-lucide="chevron-down" class="arrow-icon"></i>
+          </button>
+          <div class="faq-answer">
+            Transacta has built-in walk-away protection. If all seller offers are higher than your maximum budget limit, the agent stops negotiating immediately. You are never charged any money, and you can see the exact price gap in the audit ledger.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question-btn">
+            <span>How does payment work with Razorpay?</span>
+            <i data-lucide="chevron-down" class="arrow-icon"></i>
+          </button>
+          <div class="faq-answer">
+            Once you review and accept the final negotiated deal, Transacta creates an official order with Razorpay. You pay directly through the standard Razorpay checkout screen using UPI, credit cards, or net banking, and your receipt is verified instantly on our server.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question-btn">
+            <span>How do budget limits keep my money safe?</span>
+            <i data-lucide="chevron-down" class="arrow-icon"></i>
+          </button>
+          <div class="faq-answer">
+            You set your exact spending limit before the search starts. The AI agent is strictly locked to this number and cannot agree to any deal above it. You also always review and confirm the final price before any payment is made.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         11. BOTTOM STRIPS ROW (With Formatted Arrow Pills)
+         ==================================================================== -->
+    <div class="bottom-strips-row">
+      <!-- Card 1: Peach Box -->
+      <div class="strip-peach">
+        <h3>Deals are<br>where the<br>agents meet.</h3>
+      </div>
+
+      <!-- Card 2: Two Stacked Formatted Arrow Pills -->
+      <div class="strip-arrows">
+        <div class="arrows-bar blue">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><polyline points="13 4 21 12 13 20"></polyline></svg>
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><polyline points="13 4 21 12 13 20"></polyline></svg>
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><polyline points="13 4 21 12 13 20"></polyline></svg>
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><polyline points="13 4 21 12 13 20"></polyline></svg>
+        </div>
+        <div class="arrows-bar pink">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><polyline points="13 4 21 12 13 20"></polyline></svg>
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><polyline points="13 4 21 12 13 20"></polyline></svg>
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><polyline points="13 4 21 12 13 20"></polyline></svg>
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><polyline points="13 4 21 12 13 20"></polyline></svg>
+        </div>
+      </div>
+
+      <!-- Card 3: Live Deal Room Launcher CTA -->
+      <div class="strip-dealroom-card">
+        <div class="strip-dealroom-content">
+          <h4 class="strip-dealroom-title">Ready to watch agents negotiate?</h4>
+          <p class="strip-dealroom-desc">Experience autonomous multi-merchant price discovery and instant Razorpay checkout.</p>
+        </div>
+        <a href="/app" class="btn-dealroom-launch">
+          <span>Launch Deal Room</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         12. GIANT VANA FOOTER WITH TRANSPARENT WATERMARK
+         ==================================================================== -->
+    <footer class="giant-vana-footer">
+      <div class="footer-inner-grid">
+        <div class="footer-brand">
+          <div style="display: flex; align-items: center; gap: 0.85rem; margin-bottom: 0.85rem;">
+            <h4 style="margin-bottom: 0; font-size: 24px;">transacta</h4>
+            <span style="color: var(--vana-text-muted); font-size: 16px;">×</span>
+            <img src="assets/razorpay-full-logo.svg" alt="Razorpay" style="height: 22px; width: auto; vertical-align: middle;">
+          </div>
+          <p>Where AI buyers and merchants do business. Built for the Razorpay AI Buildathon 2026.</p>
+          <div style="font-size: 12px; margin-top: 1rem; opacity: 0.85; font-weight: 500;">
+            Official Track 01: AI Growth &amp; Agentic Commerce · Built on Razorpay's Financial Stack
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h5>Protocol</h5>
+          <ul>
+            <li><a href="/app">Live Deal Room</a></li>
+            <li><a href="/vendor">Merchant Console</a></li>
+            <li><a href="#protocol" data-scroll="protocol">Protocol Architecture</a></li>
+            <li><a href="/app#audit">Audit Ledger</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Infrastructure</h5>
+          <ul>
+            <li title="Integrated with Razorpay Orders &amp; Standard Checkout SDK"><span class="tech-tag">Razorpay Sandbox Engine</span></li>
+            <li title="Autonomous agent spending mandates inspired by NPCI UPI protocols"><span class="tech-tag">NPCI UAP Specification</span></li>
+            <li title="HMAC SHA-256 cryptographic signature validation for all transactions"><span class="tech-tag">HMAC SHA-256 Security</span></li>
+            <li title="High-performance Express REST backend managing agent negotiations"><span class="tech-tag">Agentic Commerce REST API</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Giant Transparent Background Watermark Behind The Scene -->
+      <div class="footer-watermark">TRANSACTA</div>
+    </footer>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

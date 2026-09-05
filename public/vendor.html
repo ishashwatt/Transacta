@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transacta — Autonomous Multi-Merchant Terminal (50 Verified Sellers)</title>
+  <meta name="description" content="Autonomous Multi-Merchant Inbound Terminal for Transacta Protocol. Live unit economics margin checking, dynamic value bundling, and instant Razorpay payment settlement notifications across 50 verified Indian businesses.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Sora:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="console-body">
+
+  <div class="dealroom-page-wrapper">
+    <!-- Minimalist Navigation Header (No top-right badge) -->
+    <header class="dealroom-nav-header" id="vendorGlobalNavHeader">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <a href="/" class="btn-back-home" style="text-decoration: none;">
+          <i data-lucide="home" style="width: 15px; height: 15px;"></i>
+          <span>Home</span>
+        </a>
+      </div>
+      <div></div>
+    </header>
+
+    <!-- Main Vendor Console Container -->
+    <main class="dealroom-main-container" style="max-width: 1160px; margin: 0 auto;">
+
+      <!-- ===================================================================
+           VIEW 1: INBOUND DEALS LIST (Thin Horizontal Cards Covering the Screen)
+           =================================================================== -->
+      <div id="vendorListView" class="vendor-full-list-view">
+        
+        <!-- TRANSACTA PROTOCOL DISCLAIMER (FOR BUILDATHON JUDGES - IN RED) -->
+        <p class="vendor-top-red-disclaimer">
+          <span class="red-disclaimer-prefix">PROTOCOL NOTICE (RAZORPAY BUILDATHON 2026):</span>
+          This terminal is specifically engineered for Buildathon judges to demonstrate multi-merchant autonomous routing across 50 verified Indian businesses. When any buyer requests a product, the AI dynamically routes to participating sellers who negotiate margins and lock Razorpay escrow in real time.
+        </p>
+
+        <!-- Hero Title -->
+        <div class="dealroom-hero-title" style="margin-bottom: 1.5rem; margin-top: 0.5rem;">
+          <div class="step-pill-badge" style="background: #e0f2fe; color: #0369a1; border-color: #bae6fd;">
+            Multi-Merchant Autonomous Network
+          </div>
+          <h1 class="dealroom-heading">Inbound Commerce Terminal</h1>
+          <p class="dealroom-intro">
+            Live inbound commerce requests across 50 verified Indian merchants. When a buyer initiates an inquiry for any product, the AI assigns an authorized vendor, conducts automated margin negotiation, and locks the Razorpay escrow gateway upon consensus.
+          </p>
+        </div>
+
+        <!-- Metric Summary Chips -->
+        <div class="vendor-inbox-stats-row">
+          <div class="vendor-stat-chip">
+            <span class="stat-chip-label">Active Requests</span>
+            <strong class="stat-chip-val" id="vendorStatCount">0 Inbound</strong>
+          </div>
+          <div class="vendor-stat-chip" id="openVendorsDirectoryBtn" style="cursor: pointer;" title="Click to view all 50 verified network merchants in horizontal list">
+            <span class="stat-chip-label">Network Merchants</span>
+            <strong class="stat-chip-val" style="color: #0284c7; display: flex; align-items: center; gap: 0.35rem;">
+              <span>50 Verified</span>
+              <i data-lucide="external-link" style="width: 13px; height: 13px;"></i>
+            </strong>
+          </div>
+          <div class="vendor-stat-chip">
+            <span class="stat-chip-label">Payment Gateway</span>
+            <strong class="stat-chip-val" style="color: #0284c7;">Razorpay Escrow</strong>
+          </div>
+        </div>
+
+        <!-- Modern Professional Toolbar: Segmented Filters on Left, Search & Refresh on Right (No Clunky Box) -->
+        <div class="vendor-modern-toolbar">
+          <!-- Segmented Filter Control -->
+          <div class="vendor-segmented-tabs" id="vendorFilterChipsRow">
+            <button class="vendor-filter-chip vendor-seg-tab active" data-filter="ALL" type="button">
+              <span>All</span>
+              <span class="seg-count" id="filterCountAll">3</span>
+            </button>
+            <button class="vendor-filter-chip vendor-seg-tab" data-filter="NEGOTIATING" type="button">
+              <span>Negotiating</span>
+              <span class="seg-count" id="filterCountNegotiating">1</span>
+            </button>
+            <button class="vendor-filter-chip vendor-seg-tab" data-filter="NOT_STARTED" type="button">
+              <span>Not Started</span>
+              <span class="seg-count" id="filterCountNotStarted">0</span>
+            </button>
+            <button class="vendor-filter-chip vendor-seg-tab" data-filter="COMPLETED" type="button">
+              <span>Completed</span>
+              <span class="seg-count" id="filterCountCompleted">2</span>
+            </button>
+            <button class="vendor-filter-chip vendor-seg-tab" data-filter="PAYMENT_RECEIVED" type="button">
+              <span>Payment Received</span>
+              <span class="seg-count" id="filterCountPaid">2</span>
+            </button>
+            <button class="vendor-filter-chip vendor-seg-tab" data-filter="PAYMENT_NOT_RECEIVED" type="button">
+              <span>Payment Not Received</span>
+              <span class="seg-count" id="filterCountPending">1</span>
+            </button>
+          </div>
+
+          <!-- Search & Refresh Tools -->
+          <div class="vendor-toolbar-actions">
+            <div class="vendor-search-pill">
+              <i data-lucide="search" style="width: 14px; height: 14px; color: #94a3b8;"></i>
+              <input type="text" id="vendorSearchInput" placeholder="Filter buyer, product..." class="vendor-search-input">
+              <button id="clearVendorSearchBtn" class="vendor-clear-search-btn" style="display: none;" type="button">✕</button>
+            </div>
+            <button id="refreshHorizontalDealsBtn" class="btn-vendor-refresh" type="button">
+              <i data-lucide="rotate-ccw" style="width: 13px; height: 13px;"></i>
+              <span>Refresh</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Section Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin: 1rem 0 0.85rem 0;">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <i data-lucide="inbox" style="width: 18px; height: 18px; color: #0284c7;"></i>
+            <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #0f172a;">
+              Incoming Buyer Requests (<span id="dealsCountHeader">3</span>)
+            </h3>
+          </div>
+        </div>
+
+        <!-- Thin Horizontal Cards Covering the Screen -->
+        <div id="vendorHorizontalCardsContainer" class="vendor-horizontal-cards-stack">
+          <!-- Dynamically populated by vendor-console.js -->
+        </div>
+
+      </div>
+
+      <!-- ===================================================================
+           VIEW 2: DEDICATED FULL-SCREEN DEAL ROOM (Opens When Horizontal Card is Clicked)
+           =================================================================== -->
+      <div id="vendorDetailView" class="vendor-full-detail-view" style="display: none;">
+        
+        <!-- Top Navigation Bar to return to horizontal list -->
+        <div class="vendor-detail-nav-bar">
+          <button id="backToDealsListBtn" class="btn-vendor-back-list">
+            <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+            <span>Back to Inbound Deal Requests</span>
+          </button>
+          
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span class="vendor-deal-id-pill" id="detailDealIdBadge">Deal Request #04</span>
+            <span id="detailPaymentHeaderBadge"></span>
+          </div>
+        </div>
+
+        <!-- Flat Product Economics Header (On Background, No Enclosing Box Cards) -->
+        <div class="vendor-clean-product-header">
+          <div class="vendor-clean-product-info">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; flex-wrap: wrap;">
+              <span class="step-pill-badge" id="activeMerchantBadge" style="background: #e0f2fe; color: #0369a1; border-color: #bae6fd; font-size: 11px;">
+                Assigned Merchant: Loading...
+              </span>
+              <span id="activeMerchantLocationBadge" style="font-size: 12px; color: #64748b; font-weight: 500;">India</span>
+            </div>
+            <h2 id="activeProductTitle" class="vendor-clean-product-title">
+              Selected Deal Product
+            </h2>
+            <p id="activeProductSpecs" class="vendor-clean-product-specs">
+              Verified specifications
+            </p>
+            <div class="vendor-clean-product-meta">
+              <span><strong>Buyer:</strong> <span id="activeBuyerNameTitle">Buyer Agent</span></span>
+              <span class="vendor-meta-dot">•</span>
+              <span><strong id="activeOfferTypeLabel">Offer:</strong> <span id="activeInitialBid" style="font-weight: 700; color: #0f172a;">—</span></span>
+              <span class="vendor-meta-dot">•</span>
+              <span><strong>Bundled Extras:</strong> <span id="activeBundles" style="color: #0284c7; font-weight: 600;">—</span></span>
+            </div>
+          </div>
+
+          <div class="vendor-clean-price-box">
+            <span class="vendor-clean-price-label" id="activePriceLabel">Agreed Price</span>
+            <div id="activeCurrentPrice" class="vendor-clean-current-price">—</div>
+          </div>
+        </div>
+
+        <!-- 2-Column Detail Layout: Chatbot on Left, Essential Deal Status on Right -->
+        <div class="vendor-detail-columns-grid">
+
+          <!-- Left Column: Autonomous AI Chatbot Negotiation Feed -->
+          <div class="vendor-chat-container" style="margin-bottom: 0;">
+            <div class="vendor-chat-header">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <i data-lucide="message-square" style="width: 17px; height: 17px; color: #0284c7;"></i>
+                <h4 style="margin: 0; font-size: 14.5px; font-weight: 700; color: #0f172a;">
+                  Autonomous Negotiation Chat Feed
+                </h4>
+              </div>
+              <span class="vendor-chat-indicator">
+                <span class="vendor-pulse-green-dot"></span>
+                AI Bots Communicating
+              </span>
+            </div>
+
+            <!-- Scrollable Chat Bubbles -->
+            <div class="vendor-chat-messages" id="vendorChatMessages" style="min-height: 340px; max-height: 420px;">
+              <!-- Rendered dynamically by vendor-console.js -->
+            </div>
+
+            <!-- Bot Reply Action Bar -->
+            <div class="vendor-reply-action-bar">
+              <input type="text" id="vendorBotReplyInput" placeholder="Type a message or instruction for the merchant bot to reply..." class="vendor-reply-input">
+              <button id="sendBotReplyBtn" class="btn-vendor-reply">
+                <i data-lucide="send" style="width: 15px; height: 15px;"></i>
+                <span>Send Reply</span>
+              </button>
+              <button id="autoAcceptDealBtn" class="btn-vendor-accept">
+                <i data-lucide="check-check" style="width: 15px; height: 15px;"></i>
+                <span>Agree &amp; Unlock Payment</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Right Column: Single Sleek Deal Status & Razorpay Settlement Panel (No bloated step boxes) -->
+          <div class="vendor-deal-summary-panel" id="vendorDealSummaryPanel">
+            <div class="summary-panel-header">
+              <h4 style="margin: 0; font-size: 14.5px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 0.5rem;">
+                <i data-lucide="shield-check" style="width: 17px; height: 17px; color: #0284c7;"></i>
+                Deal Status &amp; Settlement
+              </h4>
+              <span id="detailStatusBadge" class="summary-status-pill">Negotiating</span>
+            </div>
+
+            <div class="summary-key-metrics">
+              <div class="summary-metric-item">
+                <span class="summary-metric-label">Negotiation State</span>
+                <strong class="summary-metric-val" id="summaryNegotiationState">In Progress (AI Bots)</strong>
+              </div>
+              <div class="summary-metric-item">
+                <span class="summary-metric-label">Final Settlement Price</span>
+                <strong class="summary-metric-val" id="summaryAgreedPrice" style="color: #0f172a; font-size: 16px;">Pending Agreement</strong>
+              </div>
+              <div class="summary-metric-item">
+                <span class="summary-metric-label">Payment Gateway Mode</span>
+                <strong class="summary-metric-val" id="summaryPaymentGatewayMode" style="color: #dc2626;">Payment Locked</strong>
+              </div>
+              <div class="summary-metric-item">
+                <span class="summary-metric-label">Razorpay Settlement</span>
+                <span class="summary-metric-val" id="summaryRazorpayId" style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #64748b;">Awaiting deal consensus</span>
+              </div>
+            </div>
+
+            <div class="summary-note-box" id="summaryNoticeBox">
+              <i data-lucide="info" style="width: 15px; height: 15px; color: #0284c7; flex-shrink: 0; margin-top: 2px;"></i>
+              <span id="summaryNoticeText" style="font-size: 12.5px; color: #475569; line-height: 1.45;">
+                Transacta protocol keeps Razorpay payment locked until buyer and seller AI agents reach consensus. Once agreement is locked, the checkout unlocks automatically.
+              </span>
+            </div>
+
+            <!-- Tax Invoice Download / View (Shown Once Payment is Settled) -->
+            <div class="summary-invoice-action-box" id="summaryInvoiceBox" style="display: none;">
+              <div style="font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.04em; display: flex; align-items: center; gap: 0.35rem;">
+                <i data-lucide="check-circle-2" style="width: 13px; height: 13px;"></i>
+                <span>Payment Settled • Tax Invoice Ready</span>
+              </div>
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <a id="vendorViewInvoiceBtn" href="/invoice" target="_blank" class="btn-vendor-invoice" style="flex: 1;">
+                  <i data-lucide="eye" style="width: 15px; height: 15px;"></i>
+                  <span>View Invoice</span>
+                </a>
+                <a id="vendorDownloadInvoiceBtn" href="/invoice" target="_blank" class="btn-vendor-invoice-secondary" style="flex: 1;">
+                  <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                  <span>Download</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Merchant Trust & Legal Details -->
+      <div class="merchant-trust-footer" style="margin-top: 3rem;">
+        <i data-lucide="shield-check" style="width: 16px; height: 16px; color: #16a34a; flex-shrink: 0;"></i>
+        <span>Multi-Merchant Commerce Network: <strong id="footerMerchantName">50 Verified Indian Businesses</strong> • <span id="footerMerchantGstin">GST &amp; Escrow Compliant</span> • Transacta Autonomous Protocol</span>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ===================================================================
+       MODAL: 50 VERIFIED NETWORK MERCHANTS DIRECTORY (FOR BUILDATHON JUDGES)
+       =================================================================== -->
+  <div id="vendorsDirectoryModalBackdrop" class="receipt-modal-backdrop" style="display: none;">
+    <div class="receipt-modal-card" style="max-width: 980px; width: 92vw; max-height: 88vh; display: flex; flex-direction: column;">
+      
+      <!-- Modal Header -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; padding: 1.25rem 1.5rem; border-bottom: 1px solid #e2e8f0; background: #f8fafc; border-top-left-radius: 16px; border-top-right-radius: 16px;">
+        <div>
+          <div style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 11px; font-weight: 700; color: #0284c7; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">
+            <i data-lucide="shield-check" style="width: 13px; height: 13px;"></i>
+            <span>Razorpay Escrow Pre-Authorized Pool</span>
+          </div>
+          <h3 style="margin: 0; font-size: 18px; font-weight: 800; color: #0f172a;">
+            50 Verified Indian Network Merchants
+          </h3>
+          <p style="margin: 0.25rem 0 0 0; font-size: 13px; color: #64748b;">
+            Pre-registered businesses across India with autonomous bidding bots, wholesale margin protection, and verified Razorpay merchant IDs.
+          </p>
+        </div>
+        <button id="closeVendorsDirectoryModalBtn" type="button" style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #64748b; font-size: 16px; transition: all 0.15s ease;">
+          ✕
+        </button>
+      </div>
+
+      <!-- Search / Filter in Modal -->
+      <div style="padding: 0.85rem 1.5rem; border-bottom: 1px solid #e2e8f0; background: #ffffff; display: flex; gap: 0.75rem; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+        <div class="vendor-search-pill" style="width: 100%; max-width: 420px;">
+          <i data-lucide="search" style="width: 14px; height: 14px; color: #94a3b8;"></i>
+          <input type="text" id="modalVendorSearchInput" placeholder="Filter by merchant name, category, or city..." class="vendor-search-input">
+        </div>
+        <span id="modalVendorsCount" style="font-size: 12.5px; color: #64748b; font-weight: 600; white-space: nowrap;">Loading merchants...</span>
+      </div>
+
+      <!-- Scrollable Vendors Horizontal List -->
+      <div id="modalVendorsGrid" class="vendor-modal-horizontal-list" style="padding: 1rem 1.5rem; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 0.5rem; background: #f8fafc;">
+        <!-- Dynamically rendered by vendor-console.js -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div style="padding: 0.85rem 1.5rem; border-top: 1px solid #e2e8f0; background: #ffffff; display: flex; justify-content: space-between; align-items: center; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;">
+        <span style="font-size: 12px; color: #64748b;">
+          All 50 merchants maintain live unit economics margin floors and Razorpay automated escrow settlement accounts.
+        </span>
+        <button id="modalDoneBtn" class="btn-vendor-reply" style="padding: 0.45rem 1.25rem; font-size: 13px;" type="button">Done</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="vendor-console.js"></script>
+</body>
+</html>
