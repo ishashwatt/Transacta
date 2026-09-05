@@ -163,6 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let activeDeal = null;
   let all50Vendors = [];
   let isChatLocked = false;
+  let isOrderSettled = false;
 
   // =========================================================================
   // USER SESSION & LOCAL STORAGE MANAGEMENT
@@ -783,15 +784,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Toggle lock state & small in-flow invoice button
     if (isSettled) {
+      isOrderSettled = true;
+      isChatLocked = true;
       if (chatQuickActions) chatQuickActions.style.display = 'none';
       if (chatInputForm) chatInputForm.style.display = 'none';
-      if (chatLockedNotice) chatLockedNotice.style.display = 'flex';
+      if (chatLockedNotice) {
+        chatLockedNotice.style.display = 'flex';
+        chatLockedNotice.innerHTML = `<i data-lucide="check-circle" style="width: 16px; height: 16px; color: #16a34a; flex-shrink: 0;"></i> <span>This order is settled &amp; paid via Razorpay. Receipt &amp; tax invoice generated.</span>`;
+      }
       if (headerRazorpayPayBtn) {
         headerRazorpayPayBtn.disabled = true;
+        headerRazorpayPayBtn.classList.remove('pay-btn-unlocked');
         headerRazorpayPayBtn.innerHTML = `<i data-lucide="check-circle" style="width: 15px; height: 15px;"></i> <span>Settled &amp; Paid</span>`;
       }
       if (consoleRazorpayPayBtn) {
         consoleRazorpayPayBtn.disabled = true;
+        consoleRazorpayPayBtn.classList.remove('pay-btn-unlocked');
         consoleRazorpayPayBtn.innerHTML = `<i data-lucide="check-circle" style="width: 16px; height: 16px;"></i> <span>Settled &amp; Paid on Razorpay</span>`;
       }
 
@@ -806,7 +814,33 @@ document.addEventListener('DOMContentLoaded', () => {
         bottomDownloadInvoiceBtn.href = invoiceUrl;
         bottomDownloadInvoiceBtn.style.display = 'inline-flex';
       }
+    } else if (isAgreed) {
+      // Deal agreed / consensus reached but not yet paid
+      isOrderSettled = false;
+      isChatLocked = true;
+      if (chatQuickActions) chatQuickActions.style.display = 'none';
+      if (chatInputForm) chatInputForm.style.display = 'none';
+      if (chatLockedNotice) {
+        chatLockedNotice.style.display = 'flex';
+        chatLockedNotice.innerHTML = `<i data-lucide="check-circle" style="width: 16px; height: 16px; color: #16a34a; flex-shrink: 0;"></i> <span>Deal Accepted &amp; Consensus Locked. Authorize payment via Razorpay below.</span>`;
+      }
+      if (headerDownloadInvoiceBtn) headerDownloadInvoiceBtn.style.display = 'none';
+      if (bottomDownloadInvoiceBtn) bottomDownloadInvoiceBtn.style.display = 'none';
+      if (headerRazorpayPayBtn) {
+        headerRazorpayPayBtn.disabled = false;
+        headerRazorpayPayBtn.classList.add('pay-btn-unlocked');
+        headerRazorpayPayBtn.title = 'Click to Pay with Razorpay';
+        headerRazorpayPayBtn.innerHTML = `<i data-lucide="lock" style="width: 15px; height: 15px;"></i> <span>Pay ₹${finalP.toLocaleString('en-IN')} with Razorpay</span>`;
+      }
+      if (consoleRazorpayPayBtn) {
+        consoleRazorpayPayBtn.disabled = false;
+        consoleRazorpayPayBtn.classList.add('pay-btn-unlocked');
+        consoleRazorpayPayBtn.title = 'Click to Pay with Razorpay';
+        consoleRazorpayPayBtn.innerHTML = `<i data-lucide="lock" style="width: 16px; height: 16px;"></i> <span>Pay ₹${finalP.toLocaleString('en-IN')} with Razorpay</span>`;
+      }
     } else {
+      isOrderSettled = false;
+      isChatLocked = false;
       if (chatQuickActions) chatQuickActions.style.display = 'flex';
       if (chatInputForm) chatInputForm.style.display = 'flex';
       if (chatLockedNotice) chatLockedNotice.style.display = 'none';
@@ -814,10 +848,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (bottomDownloadInvoiceBtn) bottomDownloadInvoiceBtn.style.display = 'none';
       if (headerRazorpayPayBtn) {
         headerRazorpayPayBtn.disabled = false;
+        headerRazorpayPayBtn.classList.remove('pay-btn-unlocked');
         headerRazorpayPayBtn.innerHTML = `<i data-lucide="lock" style="width: 15px; height: 15px;"></i> <span>Pay ₹${finalP.toLocaleString('en-IN')} with Razorpay</span>`;
       }
       if (consoleRazorpayPayBtn) {
         consoleRazorpayPayBtn.disabled = false;
+        consoleRazorpayPayBtn.classList.remove('pay-btn-unlocked');
         consoleRazorpayPayBtn.innerHTML = `<i data-lucide="lock" style="width: 16px; height: 16px;"></i> <span>Pay ₹${finalP.toLocaleString('en-IN')} with Razorpay</span>`;
       }
     }
@@ -907,13 +943,43 @@ document.addEventListener('DOMContentLoaded', () => {
             aiEngineStatusBadge.textContent = data.aiProvider;
           }
 
-          if (data.isAgreed) {
+          const isConsensusLocked = data.isAgreed || 
+            /\b(?:consensus reached|we accept|order accepted|deal accepted|offer accepted|lock consensus|locked consensus|deal agreed)\b/i.test(data.reply || '');
+
+          if (isConsensusLocked) {
+            isChatLocked = true;
+            if (chatQuickActions) chatQuickActions.style.display = 'none';
+            if (chatInputForm) chatInputForm.style.display = 'none';
+            if (chatLockedNotice) {
+              chatLockedNotice.style.display = 'flex';
+              chatLockedNotice.innerHTML = `
+                <i data-lucide="check-circle" style="width: 16px; height: 16px; color: #16a34a; flex-shrink: 0;"></i>
+                <div style="display: flex; flex-direction: column; gap: 0.15rem; text-align: left;">
+                  <strong style="color: #0f172a; font-size: 13px;">Order Accepted &amp; Consensus Locked</strong>
+                  <span style="color: #64748b; font-size: 12px;">Negotiation concluded. The seller agreed to your terms. Chat is locked — proceed to payment below.</span>
+                </div>
+              `;
+            }
             if (dealStatusPill) {
               dealStatusPill.textContent = "Deal Consensus Locked • Ready to Pay";
-              dealStatusPill.className = "round-status-pill";
+              dealStatusPill.className = "round-status-pill success";
             }
             if (bottomSettlementStatusText) bottomSettlementStatusText.textContent = "Consensus Locked • Ready to Pay";
-            showInAppMessage("Consensus reached! You can now authorize payment on Razorpay.", "success");
+
+            // Unlock both pay buttons with hand cursor and visual pulse
+            if (headerRazorpayPayBtn) {
+              headerRazorpayPayBtn.disabled = false;
+              headerRazorpayPayBtn.classList.add('pay-btn-unlocked');
+              headerRazorpayPayBtn.title = 'Click to Pay with Razorpay';
+            }
+            if (consoleRazorpayPayBtn) {
+              consoleRazorpayPayBtn.disabled = false;
+              consoleRazorpayPayBtn.classList.add('pay-btn-unlocked');
+              consoleRazorpayPayBtn.title = 'Click to Pay with Razorpay';
+            }
+
+            showInAppMessage("Consensus reached! Chat locked — click Pay with Razorpay to complete your order.", "success");
+            if (window.lucide) window.lucide.createIcons();
           }
         }, 400);
       }
@@ -961,7 +1027,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // RAZORPAY PAYMENT & SETTLEMENT INTEGRATION (TOP HEADER + BOTTOM BAR)
   // =========================================================================
   async function startRazorpayCheckout() {
-    if (isChatLocked) {
+    if (isOrderSettled) {
       showInAppMessage("This order has already been paid and settled.", "info");
       return;
     }
@@ -1044,6 +1110,7 @@ document.addEventListener('DOMContentLoaded', () => {
         removeActiveUserDeal(deal.dealId || deal.id);
 
         // 3. Lock Chat & Update UI
+        isOrderSettled = true;
         isChatLocked = true;
         if (chatQuickActions) chatQuickActions.style.display = 'none';
         if (chatInputForm) chatInputForm.style.display = 'none';
@@ -1057,10 +1124,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (headerRazorpayPayBtn) {
           headerRazorpayPayBtn.disabled = true;
+          headerRazorpayPayBtn.classList.remove('pay-btn-unlocked');
           headerRazorpayPayBtn.innerHTML = `<i data-lucide="check-circle" style="width: 15px; height: 15px;"></i> <span>Settled &amp; Paid</span>`;
         }
         if (consoleRazorpayPayBtn) {
           consoleRazorpayPayBtn.disabled = true;
+          consoleRazorpayPayBtn.classList.remove('pay-btn-unlocked');
           consoleRazorpayPayBtn.innerHTML = `<i data-lucide="check-circle" style="width: 16px; height: 16px;"></i> <span>Settled &amp; Paid on Razorpay</span>`;
         }
 

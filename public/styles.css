@@ -41,6 +41,10 @@
   box-sizing: border-box;
 }
 
+button, [role="button"], input[type="button"], input[type="submit"] {
+  cursor: pointer;
+}
+
 body {
   font-family: var(--font-main);
   background-color: var(--vana-page-bg);
@@ -4355,16 +4359,74 @@ body {
   line-height: 1;
 }
 
+.btn-razorpay-primary,
+.header-pay-btn,
+.bottom-pay-btn {
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  background: #0284c7 !important;
+  color: #ffffff !important;
+  border: 1px solid #0284c7 !important;
+  cursor: pointer !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 3px 12px rgba(2, 132, 199, 0.35);
+  pointer-events: auto !important;
+  user-select: none;
+}
+
 .header-pay-btn {
   width: 100%;
   padding: 0.55rem 1rem !important;
   font-size: 13px !important;
   border-radius: 9px !important;
   margin-top: 0.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.45rem;
+  cursor: pointer !important;
+}
+
+.btn-razorpay-primary:hover,
+.header-pay-btn:hover,
+.bottom-pay-btn:hover {
+  background: #0369a1 !important;
+  border-color: #0369a1 !important;
+  color: #ffffff !important;
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.5) !important;
+  cursor: pointer !important;
+}
+
+.btn-razorpay-primary:active,
+.header-pay-btn:active,
+.bottom-pay-btn:active {
+  transform: translateY(0);
+  cursor: pointer !important;
+}
+
+.btn-razorpay-primary:disabled,
+.header-pay-btn:disabled,
+.bottom-pay-btn:disabled {
+  background: #e2e8f0 !important;
+  border-color: #cbd5e1 !important;
+  color: #94a3b8 !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.pay-btn-unlocked {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+  cursor: pointer !important;
+  animation: payPulseGlow 2s infinite ease-in-out;
+}
+
+@keyframes payPulseGlow {
+  0% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.6); }
+  70% { box-shadow: 0 0 0 10px rgba(2, 132, 199, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0); }
 }
 
 .header-rzp-subtext {
