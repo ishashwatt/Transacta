@@ -229,13 +229,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     consoleQueryInput.addEventListener('blur', () => {
-      setTimeout(() => {
-        closeDropdown();
-        if (consoleQueryInput.value.trim() === '') {
-          isTypewriterActive = true;
-          runTypewriter();
-        }
-      }, 200);
+      if (consoleQueryInput.value.trim() === '') {
+        isTypewriterActive = true;
+        charIdx = 0;
+        isDeleting = false;
+        typewriterTimeout = setTimeout(runTypewriter, 600);
+      }
     });
   }
 
@@ -258,14 +257,27 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.querySelectorAll('#searchDropdownMenu .dropdown-item').forEach(item => {
-    item.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const q = item.getAttribute('data-q');
+    // Prevent input blur when clicking down on suggestion items
+    item.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+    });
+
+    const triggerItemSelection = (e) => {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      const q = item.getAttribute('data-q') || item.querySelector('.dropdown-title')?.textContent?.trim() || '';
       const b = item.getAttribute('data-budget');
-      if (consoleQueryInput) consoleQueryInput.value = q;
+      if (consoleQueryInput && q) consoleQueryInput.value = q;
+      closeDropdown();
+      isTypewriterActive = false;
+      clearTimeout(typewriterTimeout);
       const bParam = b ? `&budget=${encodeURIComponent(b)}` : '';
       window.location.href = `/negotiation?q=${encodeURIComponent(q)}${bParam}`;
-    });
+    };
+
+    item.addEventListener('click', triggerItemSelection);
   });
 
   // =========================================================================
@@ -1208,9 +1220,18 @@ document.addEventListener('DOMContentLoaded', () => {
   if (consoleQueryForm) {
     consoleQueryForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const q = (consoleQueryInput ? consoleQueryInput.value : '').trim();
-      if (!q) return;
-      window.location.href = `/negotiation?q=${encodeURIComponent(q)}`;
+      closeDropdown();
+      let q = (consoleQueryInput ? consoleQueryInput.value : '').trim();
+      if (!q) {
+        q = typewriterPhrases[phraseIdx] || "Find me a 144Hz gaming monitor under 20000 rupees";
+        if (consoleQueryInput) consoleQueryInput.value = q;
+      }
+      let bParam = '';
+      const matchBudget = q.match(/(?:under|below|for|cap|budget|max|rs\.?|₹|less than)\s*([0-9]{3,7})/i);
+      if (matchBudget && matchBudget[1]) {
+        bParam = `&budget=${parseInt(matchBudget[1], 10)}`;
+      }
+      window.location.href = `/negotiation?q=${encodeURIComponent(q)}${bParam}`;
     });
   }
 

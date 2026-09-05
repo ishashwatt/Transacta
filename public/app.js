@@ -237,9 +237,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const dropdownItems = document.querySelectorAll('.dropdown-item');
   dropdownItems.forEach(item => {
-    item.addEventListener('click', () => {
-      const q = item.getAttribute('data-q') || "Find me a 144Hz gaming monitor under 20000 rupees";
-      const b = parseInt(item.getAttribute('data-budget')) || 20000;
+    item.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+    });
+    item.addEventListener('click', (e) => {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      const q = item.getAttribute('data-q') || item.querySelector('.dropdown-title')?.textContent?.trim() || "Find me a 144Hz gaming monitor under 20000 rupees";
+      const b = parseInt(item.getAttribute('data-budget'), 10) || 20000;
       buyerQueryInput.value = q;
       currentBudget = b;
       closeDropdown();
