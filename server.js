@@ -1800,9 +1800,13 @@ app.get('/api/protocol/metrics', (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`=======================================================`);
-  console.log(`🚀 Transacta Protocol Gateway running at http://localhost:${PORT}`);
-  console.log(`✨ Where AI buyers and merchants do business.`);
-  console.log(`=======================================================`);
-});
+if (require.main === module || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`=======================================================`);
+    console.log(`🚀 Transacta Protocol Gateway running at http://localhost:${PORT}`);
+    console.log(`✨ Where AI buyers and merchants do business.`);
+    console.log(`=======================================================`);
+  });
+}
+
+module.exports = app;
